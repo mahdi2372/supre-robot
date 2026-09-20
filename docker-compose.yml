@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: supre
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-supre}
+      POSTGRES_DB: supre_robot
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supre -d supre_robot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # Keep the DB private; expose only for local development if needed:
+    # ports:
+    #   - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    # ports:
+    #   - "6379:6379"
+
+  bot:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DISCORD_TOKEN: ${DISCORD_TOKEN:?Set DISCORD_TOKEN in .env}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:?Set DISCORD_CLIENT_ID in .env}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET:?Set DISCORD_CLIENT_SECRET in .env}
+      DISCORD_GUILD_ID: ${DISCORD_GUILD_ID:-}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+      DATABASE_URL: postgres://supre:${POSTGRES_PASSWORD:-supre}@postgres:5432/supre_robot
+      REDIS_URL: redis://redis:6379
+      SESSION_SECRET: ${SESSION_SECRET:?Set SESSION_SECRET (openssl rand -hex 32)}
+      ADMIN_API_KEY: ${ADMIN_API_KEY:-}
+      API_HOST: 0.0.0.0
+      API_PORT: "3000"
+      REQUEST_RATE_LIMIT_PER_MINUTE: ${REQUEST_RATE_LIMIT_PER_MINUTE:-300}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_RETENTION_DAYS: ${LOG_RETENTION_DAYS:-30}
+      DATABASE_AUTO_MIGRATE: "true"
+    ports:
+      - "${API_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  pgdata:
