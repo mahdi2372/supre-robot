@@ -9,10 +9,11 @@
    - Enable **Privileged Gateway Intents**:
      - `Server Members` (welcome/leave, role management)
      - `Message Content` (auto-moderation and message logging read content)
+     - `Voice States` (music: voice-channel tracking and leave handling)
    - Invite the bot with the `bot` + `applications.commands` scopes and
      permissions: `Manage Roles`, `Manage Channels`, `Kick Members`,
      `Ban Members`, `Moderate Members`, `Manage Messages`, `Send Messages`,
-     `Embed Links`, `Read Message History`.
+     `Embed Links`, `Read Message History`, `Connect`, `Speak`.
 3. **OAuth2 → General**: copy **Client ID** / **Client Secret** into
    `DISCORD_CLIENT_ID` / `DISCORD_CLIENT_SECRET`.
 4. **OAuth2 → Redirects**: add your public callback URL **exactly**:
@@ -68,6 +69,19 @@ NODE_ENV=production npm start
 
 Requires a reachable Postgres (migrations run on boot when
 `DATABASE_AUTO_MIGRATE=true`) and, optionally, Redis.
+
+**Audio (music module):** the music stack is pure-npm — `opusscript`
+(pure-JS Opus encoder), `libsodium-wrappers`, and the `discord-voip`/
+`discord-player` voice layer — so no build toolchain is needed. Stream
+conversion uses **ffmpeg**, resolved in this order: `FFMPEG_PATH` env var,
+`ffmpeg` on `PATH`, then the npm packages (`@ffmpeg-installer/ffmpeg`,
+`ffmpeg-static`). The stock `Dockerfile` (node:22-alpine) therefore installs
+the **system ffmpeg via apk** — the `ffmpeg-static` npm binary is glibc-only
+and cannot run on musl. For non-Docker deployments on glibc Linux, the
+`ffmpeg-static` postinstall (run during `npm ci`) provides the binary
+automatically; installs with `--ignore-scripts` and no system ffmpeg will
+fail at play time. The queue itself is in-memory, so it needs no extra
+runtime dependency.
 
 ## 5. Production checklist
 

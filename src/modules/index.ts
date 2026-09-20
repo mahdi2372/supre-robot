@@ -7,6 +7,7 @@ import { automodModule } from './automod/module.js';
 import { configModule } from './config/module.js';
 import { customModule } from './custom/module.js';
 import { ticketsModule } from './tickets/module.js';
+import { musicModule } from './music/module.js';
 
 /**
  * The module registry. Adding a new feature module = implement a SupreModule
@@ -21,5 +22,6 @@ export const ALL_MODULES: SupreModule[] = [
   automodModule,
   configModule,
   customModule,
-  ticketsModule
+  ticketsModule,
+  musicModule
 ];

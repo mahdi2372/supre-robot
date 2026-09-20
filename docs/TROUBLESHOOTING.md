@@ -123,6 +123,47 @@ cookie; it can't be "reset" separately.)
   (`closeDelaySeconds`, default 5) is the last-chance window to read the
   closing message. Set it to 0 for immediate deletion.
 
+## Music issues
+
+- **Queue is gone after a restart** — by design. The queue is in-memory
+  (per guild, per process); only the playback *policy* (volume, caps, idle
+  timeout, manage role) is persisted. If the queue must survive restarts,
+  that is a feature to build, not a misconfiguration.
+- **"Could not play that" / nothing streams** — the extractor could not
+  resolve the query (removed/unavailable track, dead link, or the source's
+  API changed). Single tracks fail per-track; the rest of the queue keeps
+  playing. Check the bot logs for a `music: play failed` /
+  `music: track playback error` line with the underlying error.
+- **Bot won't join voice / silent output** — the bot needs **Connect** and
+  **Speak** on the target channel, and (on voice) no per-channel mute.
+  Audio is encoded with the pure-JS `opusscript` encoder (no native build
+  toolchain). Stream conversion needs an **ffmpeg** binary, found in this
+  order: `FFMPEG_PATH`, `ffmpeg` on `PATH` (the stock Docker image installs
+  it via apk, since the `ffmpeg-static` npm binary is glibc-only and won't
+  run on alpine), then the npm fallbacks. If none exist, playback fails at
+  play time (see DEPLOYMENT.md).
+- **Track longer than the limit is skipped** — `maxTrackSeconds`
+  (0 = unlimited) drops non-live tracks over the cap when a search or
+  playlist is added. It is a queue-hygiene guard, applied once per add.
+- **Bot stays in the channel after stop** — expected: `/music stop` clears
+  the queue but leaves after the idle timeout (`idleTimeoutSeconds`,
+  default 300). `/music leave` disconnects immediately; the bot also
+  leaves whenever the voice channel empties.
+- **Controls rejected with a permission error** — queue controls require
+  Manage Server, or being in the same voice channel as the bot (plus the
+  module's `manageRoleId` role when set). `/music play`, `/music queue`
+  and `/music now` are open to anyone.
+- **Bot never joins / never leaves voice channels, or the log warns
+  `client is missing "GuildVoiceStates" intent`** — the **Voice States**
+  privileged intent is not enabled in the Developer Portal (Bot tab).
+  The player relies on voice-state events for joining, reconnection and
+  empty-channel leave handling; without the intent, music will not work.
+- **`Could not load youtube library` in the logs** — the YouTube extractor
+  streams through `youtube-ext` (installed as a dependency). If you run a
+  custom install, make sure `youtube-ext` (or one of `ytdl-core`,
+  `@distube/ytdl-core`, `play-dl`, `yt-stream`) is present; force a choice
+  with `DP_FORCE_YTDL_MOD=<lib>`.
+
 ## Flood of `RATE_LIMITED` from the API
 
 The per-IP limit (`REQUEST_RATE_LIMIT_PER_MINUTE`, default 300) was hit. This

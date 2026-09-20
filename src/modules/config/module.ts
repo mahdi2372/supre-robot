@@ -20,7 +20,8 @@ const MODULE_CHANNEL_KEYS: Record<string, { module: string; key: string }> = {
   logging: { module: 'logging', key: 'defaultChannelId' },
   welcome: { module: 'welcome', key: 'channelId' },
   moderation: { module: 'moderation', key: 'logChannelId' },
-  tickets: { module: 'tickets', key: 'channelId' }
+  tickets: { module: 'tickets', key: 'channelId' },
+  music: { module: 'music', key: 'announceChannelId' }
 };
 
 type CmdInteraction = ChatInputCommandInteraction;
@@ -55,7 +56,8 @@ const configCommand: SupreCommand = {
               { name: 'logging', value: 'logging' },
               { name: 'welcome', value: 'welcome' },
               { name: 'moderation', value: 'moderation' },
-              { name: 'tickets', value: 'tickets' }
+              { name: 'tickets', value: 'tickets' },
+              { name: 'music', value: 'music' }
             )
           )
           .addChannelOption((opt) => opt.setName('channel').setDescription('Text channel (omit to clear)'))

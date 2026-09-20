@@ -67,6 +67,7 @@ user-safe message (never a stack trace).
 | `config` | `/config` — list/view/enable/disable modules and set log channels. |
 | `custom` | DB-backed custom commands registered as real slash commands per guild. |
 | `tickets` | Support tickets: private channels with atomic per-guild numbering, staff claims, member management, message capture + transcripts, and restart reconciliation. |
+| `music` | Music playback (play/queue/skip/stop/pause/loop/shuffle/volume/seek/remove) via discord-player. Per-guild in-memory queue; now-playing embeds; per-server volume/queue-cap/track-length/idle-timeout/manage-role policy. |
 
 ## Per-guild enablement & settings
 

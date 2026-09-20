@@ -102,14 +102,42 @@ Configuration: announcement channel via `/config channel module:tickets`;
 category, staff roles, limits, transcript and close-delay settings via
 `/config module action:view module:tickets` (dashboard for editing).
 
+## Music
+
+`/music` is one command with subcommands. Playback uses a per-server,
+**in-memory** queue (a bot restart drops it — see TROUBLESHOOTING).
+"Controllable" = **Manage Server**, or being in the same voice channel as
+the bot, plus the module's `manageRoleId` role when one is set.
+
+| Command | Description | Permission |
+| --- | --- | --- |
+| `/music play query:<search or URL>` | Play a track/playlist (YouTube, SoundCloud, Spotify, Vimeo, …). Queues if something is already playing. | anyone (in a voice channel) |
+| `/music queue` | Show the current track plus up to 10 queued tracks. | anyone |
+| `/music now` | Show the now-playing track. | anyone |
+| `/music skip` | Skip the current track. | controllable |
+| `/music stop` | Stop playback and clear the queue (bot stays, leaves after the idle timeout). | controllable |
+| `/music leave` | Leave the voice channel immediately. | controllable |
+| `/music pause` / `/music resume` | Pause / resume playback. | controllable |
+| `/music loop mode:<off\|track\|queue>` | Set the repeat mode. | controllable |
+| `/music shuffle` | Toggle shuffle. | controllable |
+| `/music volume [percent]` | Set volume 0–150 (omit to read it). | controllable |
+| `/music remove position:<n>` | Remove the n-th queued track. | controllable |
+| `/music seek time:<90\|1:30\|1:02:03>` | Seek in the current track (non-live only). | controllable |
+
+Now-playing embeds are posted to the configured announce channel
+(`/config channel module:music`), falling back to the channel that ran
+`/music play`. Volume, queue cap, track-length cap, idle timeout and the
+manage role are per-server settings — view with
+`/config module action:view module:music`.
+
 ## Configuration
 
 | Command | Description | Permission |
 | --- | --- | --- |
 | `/config module action:<list\|view\|enable\|disable> [module]` | List modules, view one module's settings, enable, or disable a module | ManageGuild |
-| `/config channel module:<logging\|welcome\|moderation\|tickets> [channel]` | Set (or clear, by omitting `channel`) a module's log channel | ManageGuild |
+| `/config channel module:<logging\|welcome\|moderation\|tickets\|music> [channel]` | Set (or clear, by omitting `channel`) a module's log channel | ManageGuild |
 | `/config list` | List all modules and their status | ManageGuild |
 
 Modules: `core`, `logging`, `welcome`, `moderation`, `automod`, `custom`,
-`tickets`. `core` cannot be disabled. Modules are enabled by default in a
-fresh server.
+`tickets`, `music`. `core` cannot be disabled. Modules are enabled by
+default in a fresh server.

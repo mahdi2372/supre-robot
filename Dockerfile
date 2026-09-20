@@ -11,7 +11,10 @@ RUN npm run build
 FROM node:22-alpine AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
-RUN apk add --no-cache curl
+# curl: healthcheck. ffmpeg: music playback on musl — the ffmpeg-static npm
+# binary is glibc-only and cannot run on alpine, so the music module relies
+# on this system binary (found via PATH, before any npm fallback).
+RUN apk add --no-cache curl ffmpeg
 COPY package.json package-lock.json* ./
 RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
 COPY --from=build /app/dist ./dist

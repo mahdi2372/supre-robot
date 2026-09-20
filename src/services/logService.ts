@@ -16,6 +16,7 @@ export const LOG_KINDS = [
   'channel_change',
   'guild_change',
   'ticket',
+  'music',
   'giveaway',
   'verification',
   'security',

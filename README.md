@@ -2,9 +2,9 @@
 
 A production-grade, modular Discord bot platform: moderation with case tracking and
 an escalation ladder, auto-moderation with false-positive protection, support
-tickets with transcripts, welcome/leave messages, custom commands with a safe
-template engine, per-guild settings with a dashboard, an audit log service,
-durable background jobs, and English + বাংলা i18n.
+tickets with transcripts, music playback, welcome/leave messages, custom commands
+with a safe template engine, per-guild settings with a dashboard, an audit log
+service, durable background jobs, and English + বাংলা i18n.
 
 Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreSQL.
 
@@ -24,6 +24,10 @@ Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreS
   per-user open limits, staff claims and member management, message capture
   with chunked transcripts, announcement channel, and restart reconciliation
   (`/ticket open|close|claim|add|remove|list|transcript|panel`).
+- **Music** — YouTube/SoundCloud/Spotify playback via discord-player with a
+  per-guild in-memory queue: `/music play|queue|now|skip|stop|leave|pause|resume|loop|shuffle|volume|remove|seek`,
+  now-playing embeds, and per-server policy (default volume, queue cap,
+  track-length cap, idle-leave timeout, manage role).
 - **Dashboard** — Discord OAuth2 login, per-guild settings management, HTML-escaped
   server-rendered pages, CSRF-protected writes.
 - **Safe templating** — `{{var}}` templates with no code-evaluation surface;
@@ -86,7 +90,8 @@ src/
   config/          env parsing + validation (zod)
   core/            module system, settings service, permissions, interactions, metrics
   database/        pg pool, migration runner, executor abstraction
-  modules/         core, config, custom, logging, moderation, welcome, automod
+  modules/         core, config, custom, logging, moderation, welcome, automod,
+                   tickets, music
   api/             Express app, OAuth2 sessions, REST API, dashboard (HTML)
   jobs/            durable job scheduler + handlers
   services/        audit log service
@@ -108,5 +113,6 @@ docs/              configuration, deployment, security, commands, API, modules, 
 
 ## Status
 
-Initial platform release (v0.1.0). Roadmap: tickets, verification, economy,
-XP/levels, giveaways, polls, music, anti-raid tooling, and an automation rules engine.
+Initial platform release (v0.1.0). Shipped: moderation, automod, welcome,
+tickets, music. Roadmap: verification, economy, XP/levels, giveaways, polls,
+anti-raid tooling, and an automation rules engine.

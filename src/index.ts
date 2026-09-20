@@ -44,6 +44,7 @@ import { welcomeSettingsDefaults, welcomeSettingsSchema } from './modules/welcom
 import { moderationSettingsDefaults, moderationSettingsSchema } from './modules/moderation/settings.js';
 import { automodSettingsDefaults, automodSettingsSchema } from './modules/automod/settings.js';
 import { ticketsSettingsDefaults, ticketsSettingsSchema } from './modules/tickets/settings.js';
+import { musicSettingsDefaults, musicSettingsSchema } from './modules/music/settings.js';
 
 async function main(): Promise<void> {
   // 1. Configuration
@@ -95,6 +96,7 @@ async function main(): Promise<void> {
   settings.register('moderation', { schema: moderationSettingsSchema, defaults: moderationSettingsDefaults });
   settings.register('automod', { schema: automodSettingsSchema, defaults: automodSettingsDefaults });
   settings.register('tickets', { schema: ticketsSettingsSchema, defaults: ticketsSettingsDefaults });
+  settings.register('music', { schema: musicSettingsSchema, defaults: musicSettingsDefaults });
 
   const client = new Client({
     intents: [
@@ -102,7 +104,10 @@ async function main(): Promise<void> {
       GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildBans,
       GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent
+      GatewayIntentBits.MessageContent,
+      // Music: the player tracks voice state changes (join/leave/empty
+      // channel handling, auto-reconnect) through this intent.
+      GatewayIntentBits.GuildVoiceStates
     ]
   });
   client.on('error', (err) => logger.error({ err: { message: err.message, name: err.name } }, 'discord client error'));
