@@ -66,6 +66,7 @@ user-safe message (never a stack trace).
 | `automod` | Message scanning with pluggable detectors + a false-positive-protecting decision policy. |
 | `config` | `/config` — list/view/enable/disable modules and set log channels. |
 | `custom` | DB-backed custom commands registered as real slash commands per guild. |
+| `tickets` | Support tickets: private channels with atomic per-guild numbering, staff claims, member management, message capture + transcripts, and restart reconciliation. |
 
 ## Per-guild enablement & settings
 

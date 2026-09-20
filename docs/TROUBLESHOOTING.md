@@ -100,6 +100,29 @@ cookie; it can't be "reset" separately.)
 - The template uses **double braces**: `{{user}}`, `{{args}}`, etc. Single
   braces (`{user}`) are rendered literally.
 
+## Ticket issues
+
+- **"You already have N open ticket(s)"** — the per-user limit
+  (`maxOpenPerUser`, default 1) counts tickets with status `open`. A ticket
+  whose channel was deleted while the bot was down is marked closed at the
+  next startup (reason `channel deleted`), which frees the slot; otherwise
+  staff can close it with `/ticket close`.
+- **Ticket channel not created** — the bot needs **Manage Channels** in the
+  guild (and Manage Roles is not required). If channel creation fails, the
+  allocated ticket row is rolled back, so no orphan numbers accumulate.
+- **Transcript empty on close** — capture only starts while the ticket is
+  open, the module is enabled, and the channel is still named `ticket-<n>`
+  (capture is pre-filtered on the name; renaming a ticket channel stops
+  capture). Bot messages are skipped; messages sent before the ticket
+  existed are not part of it. Captured content is truncated at 2000
+  characters; attachments have no text.
+- **Transcript fence looks mangled** — user content containing triple
+  backticks is replaced with `'''` so it can never break out of the code
+  block.
+- **Channel deleted seconds after "closed"** — expected: the close delay
+  (`closeDelaySeconds`, default 5) is the last-chance window to read the
+  closing message. Set it to 0 for immediate deletion.
+
 ## Flood of `RATE_LIMITED` from the API
 
 The per-IP limit (`REQUEST_RATE_LIMIT_PER_MINUTE`, default 300) was hit. This

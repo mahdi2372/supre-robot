@@ -75,13 +75,41 @@ restricted by optional role, Discord permission, and per-user cooldown.
 Templates cannot execute code: only `{{name}}` / `{{a.b}}` variable lookups are
 supported — no loops, conditionals, or function access.
 
+## Tickets
+
+`/ticket` is one command with subcommands. "Staff" = anyone with
+**Manage Channels** (or a role configured in the module's `staffRoleIds`).
+
+| Command | Description | Permission |
+| --- | --- | --- |
+| `/ticket open [subject]` | Open a private ticket channel (numbered per server). Enforces the per-user open-ticket limit. | anyone |
+| `/ticket close [reason]` | Close the ticket in this channel: posts the transcript (if enabled), announces, marks closed, and deletes the channel after the configured delay. | staff or the requester (if `requesterCanClose`) |
+| `/ticket claim` | Assign the ticket in this channel to yourself. | staff |
+| `/ticket add user:<member>` | Grant a member access to the ticket channel. | staff |
+| `/ticket remove user:<member>` | Revoke a member's access to the ticket channel. | staff |
+| `/ticket list` | List this server's open tickets (max 25 shown). | staff |
+| `/ticket transcript` | Post the captured transcript of this ticket without closing it. | staff |
+| `/ticket panel` | Reply with the embed + **Open a ticket** button to copy into a support channel. | ManageGuild |
+
+The panel button (`📩 Open a ticket`) opens a ticket with no subject, subject
+to the same per-user limit. Messages inside open ticket channels are captured
+for transcripts (bot messages excluded, content truncated at 2000 chars).
+Tickets whose channel disappears (deleted out-of-band, or while the bot is
+down) are marked closed with reason `channel deleted` — live on the
+`ChannelDelete` event and at startup reconciliation.
+
+Configuration: announcement channel via `/config channel module:tickets`;
+category, staff roles, limits, transcript and close-delay settings via
+`/config module action:view module:tickets` (dashboard for editing).
+
 ## Configuration
 
 | Command | Description | Permission |
 | --- | --- | --- |
 | `/config module action:<list\|view\|enable\|disable> [module]` | List modules, view one module's settings, enable, or disable a module | ManageGuild |
-| `/config channel module:<logging\|welcome\|moderation> [channel]` | Set (or clear, by omitting `channel`) a module's log channel | ManageGuild |
+| `/config channel module:<logging\|welcome\|moderation\|tickets> [channel]` | Set (or clear, by omitting `channel`) a module's log channel | ManageGuild |
 | `/config list` | List all modules and their status | ManageGuild |
 
-Modules: `core`, `logging`, `welcome`, `moderation`, `automod`, `custom`.
-`core` cannot be disabled. Modules are enabled by default in a fresh server.
+Modules: `core`, `logging`, `welcome`, `moderation`, `automod`, `custom`,
+`tickets`. `core` cannot be disabled. Modules are enabled by default in a
+fresh server.

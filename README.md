@@ -1,9 +1,10 @@
 # Supre Robot
 
 A production-grade, modular Discord bot platform: moderation with case tracking and
-an escalation ladder, auto-moderation with false-positive protection, welcome/leave
-messages, custom commands with a safe template engine, per-guild settings with a
-dashboard, an audit log service, durable background jobs, and English + বাংলা i18n.
+an escalation ladder, auto-moderation with false-positive protection, support
+tickets with transcripts, welcome/leave messages, custom commands with a safe
+template engine, per-guild settings with a dashboard, an audit log service,
+durable background jobs, and English + বাংলা i18n.
 
 Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreSQL.
 
@@ -19,6 +20,10 @@ Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreS
   suspicious URLs, banned words with zero-width-evasion resistance, custom regex,
   flood, duplicates, new-account signals) feeding a confidence policy where weak
   signals can never trigger a punishment alone.
+- **Tickets** — private support channels with atomic per-guild numbering,
+  per-user open limits, staff claims and member management, message capture
+  with chunked transcripts, announcement channel, and restart reconciliation
+  (`/ticket open|close|claim|add|remove|list|transcript|panel`).
 - **Dashboard** — Discord OAuth2 login, per-guild settings management, HTML-escaped
   server-rendered pages, CSRF-protected writes.
 - **Safe templating** — `{{var}}` templates with no code-evaluation surface;

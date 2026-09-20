@@ -43,6 +43,7 @@ import { loggingSettingsDefaults, loggingSettingsSchema } from './modules/loggin
 import { welcomeSettingsDefaults, welcomeSettingsSchema } from './modules/welcome/settings.js';
 import { moderationSettingsDefaults, moderationSettingsSchema } from './modules/moderation/settings.js';
 import { automodSettingsDefaults, automodSettingsSchema } from './modules/automod/settings.js';
+import { ticketsSettingsDefaults, ticketsSettingsSchema } from './modules/tickets/settings.js';
 
 async function main(): Promise<void> {
   // 1. Configuration
@@ -93,6 +94,7 @@ async function main(): Promise<void> {
   settings.register('welcome', { schema: welcomeSettingsSchema, defaults: welcomeSettingsDefaults });
   settings.register('moderation', { schema: moderationSettingsSchema, defaults: moderationSettingsDefaults });
   settings.register('automod', { schema: automodSettingsSchema, defaults: automodSettingsDefaults });
+  settings.register('tickets', { schema: ticketsSettingsSchema, defaults: ticketsSettingsDefaults });
 
   const client = new Client({
     intents: [

@@ -19,7 +19,8 @@ import { translate } from '../../utils/i18n/index.js';
 const MODULE_CHANNEL_KEYS: Record<string, { module: string; key: string }> = {
   logging: { module: 'logging', key: 'defaultChannelId' },
   welcome: { module: 'welcome', key: 'channelId' },
-  moderation: { module: 'moderation', key: 'logChannelId' }
+  moderation: { module: 'moderation', key: 'logChannelId' },
+  tickets: { module: 'tickets', key: 'channelId' }
 };
 
 type CmdInteraction = ChatInputCommandInteraction;
@@ -53,7 +54,8 @@ const configCommand: SupreCommand = {
             opt.setName('module').setDescription('Module').setRequired(true).addChoices(
               { name: 'logging', value: 'logging' },
               { name: 'welcome', value: 'welcome' },
-              { name: 'moderation', value: 'moderation' }
+              { name: 'moderation', value: 'moderation' },
+              { name: 'tickets', value: 'tickets' }
             )
           )
           .addChannelOption((opt) => opt.setName('channel').setDescription('Text channel (omit to clear)'))
