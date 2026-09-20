@@ -72,6 +72,17 @@ run — editing an applied migration fails startup instead of silently re-applyi
 | `NODE_ENV` | no | `development` | `development` \| `test` \| `production`. In production the session cookie is set `Secure`. |
 | `API_ONLY` | no | `false` | Run only the API/dashboard — skips Discord gateway login and command registration. An ops convenience for debugging the web surface or for API-only instances. |
 
+## Audio (music) — read by the libraries, not by the app
+
+These are consumed directly by `discord-player` / the YouTube extractor, not
+by Supre Robot's config schema (unknown keys are ignored at boot). Only set
+them if you need to customize the audio stack:
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `FFMPEG_PATH` | no | auto-detect | Explicit path to an ffmpeg binary. Auto-detection order: `FFMPEG_PATH`, `ffmpeg` on `PATH` (the Docker image installs it via apk), `avconv`, then the npm fallbacks (`@ffmpeg-installer/ffmpeg`, `ffmpeg-static`). |
+| `DP_FORCE_YTDL_MOD` | no | first found of `youtube-ext`, `ytdl-core`, `@distube/ytdl-core`, `play-dl`, `yt-stream` | Comma-separated list that forces (and re-orders) which YouTube streaming library the extractor uses. |
+
 ## Validation rules worth knowing
 
 - `DISCORD_TOKEN`, `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DATABASE_URL`,

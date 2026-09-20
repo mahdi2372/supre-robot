@@ -24,10 +24,13 @@ Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreS
   per-user open limits, staff claims and member management, message capture
   with chunked transcripts, announcement channel, and restart reconciliation
   (`/ticket open|close|claim|add|remove|list|transcript|panel`).
-- **Music** — YouTube/SoundCloud/Spotify playback via discord-player with a
-  per-guild in-memory queue: `/music play|queue|now|skip|stop|leave|pause|resume|loop|shuffle|volume|remove|seek`,
+- **Music** — YouTube, SoundCloud, Spotify, Vimeo (and more) playback via
+  discord-player with a per-guild in-memory queue:
+  `/music play|queue|now|skip|stop|leave|pause|resume|loop|shuffle|volume|remove|seek`,
   now-playing embeds, and per-server policy (default volume, queue cap,
-  track-length cap, idle-leave timeout, manage role).
+  track-length cap, idle-leave timeout, manage role). Zero native setup:
+  pure-JS Opus encoding, and ffmpeg is provided by the Docker image (apk)
+  or the `ffmpeg-static` npm postinstall elsewhere.
 - **Dashboard** — Discord OAuth2 login, per-guild settings management, HTML-escaped
   server-rendered pages, CSRF-protected writes.
 - **Safe templating** — `{{var}}` templates with no code-evaluation surface;
@@ -42,6 +45,10 @@ Built on Node.js 22, TypeScript (strict), discord.js 14, Express 4, and PostgreS
 - Node.js ≥ 22
 - PostgreSQL ≥ 14
 - A Discord application (bot + OAuth2) — see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+- Privileged gateway intents: `Server Members`, `Message Content`, and
+  (for music) `Voice States` — enabled in the Developer Portal
+- Music also needs `Connect` + `Speak` voice permissions on the target
+  channels; no other audio setup (Opus is pure-JS, ffmpeg is auto-provided)
 - Optional: Redis (otherwise an in-memory cache is used)
 
 ## Quickstart (development)
